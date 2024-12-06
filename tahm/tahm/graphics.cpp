@@ -1,6 +1,4 @@
 #include "seek.h"
-#include "utils.h"
-
 
 /*
 		tahmlib
@@ -91,8 +89,6 @@ void Tahm::Graphics::printf(const char* alignment, int alignmentWidth, int margi
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(renderedText);
 }
-
-
 
 //draw
 
