@@ -14,13 +14,6 @@
 		such as: audio device management, sound creation.
 */
 
-
-
-
-
-
-
-
 Tahm::Audio::Audio()
 {
 	SDL_Init(SDL_INIT_AUDIO);
@@ -35,8 +28,6 @@ void Tahm::Audio::setupDevice()
 		std::cerr << "Sound device error: " << SDL_GetError() << '\n';
 	}
 }
-
-
 
 Tahm::Audio::Sound* Tahm::Audio::newSound(const char* path)
 {

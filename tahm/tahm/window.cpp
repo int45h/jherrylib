@@ -14,14 +14,18 @@
         the game window.
 */
 
-
-
-void Tahm::Window::create(const char* title, int width, int height)
+void Tahm::Window::create(const char* title, int _width, int _height)
 {
     this->title = title;
-    this->width = width;
-    this->height = height;
-
+    this->width = _width;
+    this->height = _height;
+    
+    //if (this->width != _width || this->height != _height)
+    //{
+    //    SDL_SetWindowSize(SDLwindow, width, height);
+    //    this->width = _width;
+    //    this->height = _height;    
+    //}
 }
 
 void Tahm::Window::init(void)

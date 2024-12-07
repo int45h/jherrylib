@@ -58,3 +58,4 @@ ipch/
 *.tlog
 
 *.exe
+build/*

@@ -1,10 +1,6 @@
 #pragma once
 
 #include "tahm/seek.h"
-
-
-
-
 /*
 		tahmlib
 		A C++ library for Game Development
@@ -17,10 +13,7 @@
 		Main library methods that represent the game loop:
 		start, update, render, and event.
 */
-
 extern Tahm& tahm;
-
-int main(int argc, char* argv[]);
 
 #if __has_include("main.h")
 

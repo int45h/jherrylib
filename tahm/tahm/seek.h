@@ -1,21 +1,18 @@
 #pragma once
 
 /*
-		tahmlib
-		A C++ library for Game Development
+	tahmlib
+	A C++ library for Game Development
 
-		Author: Tamta Asatiani
-		tamta@geolab.edu.ge
+	Author: Tamta Asatiani
+	tamta@geolab.edu.ge
 
-		-- Seek --
+	-- Seek --
 
-		tahmlib's dependencies
+	tahmlib's dependencies
 */
 
-
-
 // C++ standard libraries
-
 #include <iostream>
 
 // third-party libraries
@@ -24,7 +21,6 @@
 #include <SDL2/SDL_ttf.h>
 
 // parts of the game engine
-
 #include "defs.h"
 #include "tahm.h"
 #include "keys.h"

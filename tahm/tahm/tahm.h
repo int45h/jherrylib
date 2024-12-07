@@ -1,7 +1,8 @@
 #pragma once
 
 #include "seek.h"
-
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 
 /*
 		tahmlib
@@ -16,11 +17,48 @@
 		provided in tahmlib.
 */
 
+#if defined(__unix__)
+#include <dlfcn.h>
 
+typedef void* PluginHandle;
+#endif
+
+typedef void(*StartMethod)();
+typedef void(*KeyPressedMethod)(Event);
+typedef void(*UpdateMethod)(float);
+typedef void(*DrawMethod)();
+
+#define SCRIPT_PATH "./"
+class Tahm;
+class NativeScript
+{
+    private:
+    StartMethod m_start;
+    KeyPressedMethod m_keyPressed;
+    UpdateMethod m_update;
+    DrawMethod m_draw;
+    
+    PluginHandle handle;
+
+    public:
+    NativeScript(): 
+        m_start(NULL), 
+        m_keyPressed(NULL), 
+        m_update(NULL), 
+        m_draw(NULL) {}
+
+    bool LoadSharedObject(const char *filepath);
+    bool Bind(Tahm *);
+    bool Close();
+
+    bool RunStart();
+    bool RunKeyPressed(Event event);
+    bool RunUpdate(float delta);
+    bool RunDraw();
+};
 
 
 // engine class
-
 class Tahm {
 	
 private:	// classes
@@ -41,8 +79,8 @@ private:	// classes
 	private: // attributes
 		const char* title = "Untitled";
 
-		int width = 400;
-		int height = 400;
+		int width = 1280;
+		int height = 720;
 
 		int flags = 0;
 
@@ -136,13 +174,13 @@ public:	// classes
 		// draw text to screen
 		// takes in arguments for the text position (x, y), font,
 		// and the text that should be rendered
-		void print(int x, int y, TTF_Font* font, const char* text);
+		void renderText(int x, int y, TTF_Font* font, const char* text);
 
 		// draw text to screen and align it horizontally - left, center, or right
 		// takes in arguments for the alignment style ('left', 'center', or 'right'),
 		// alignment width, left and top margins, font,
 		// and the text that should be rendered
-		void printf(const char* alignment, int alignmentWidth, int marginX, int marginY, TTF_Font* font, const char* text);
+		void renderText(const char* alignment, int alignmentWidth, int marginX, int marginY, TTF_Font* font, const char* text);
 
 	private:	// attributes
 		Renderer* renderer;
@@ -197,39 +235,39 @@ public:	// classes
 
 public:	// attributes
 	// instances to all of the nested classes
-	Window* window;
-	Input* input;
-	Renderer* renderer;
-	Graphics* graphics;
-	Audio* audio;
+	Window window;
+	Input input;
+	Renderer renderer;
+	Graphics graphics;
+	Audio audio;
 
 public:	// methods
 	static Tahm& getInstance();
-
 	void run();
-
-	void initializeCallbacks(
-		void(*start)(), void(*input)(Event),
-		void(*update)(), void(*draw)()
-	);
+    bool loadPlugin(const char *path);
 
 	~Tahm();
 
 private:	// attributes
 	static Tahm* tahm;
 
-	// callbacks
-	void(*start_ptr)();
-	void(*input_ptr)(Event);
-	void(*update_ptr)();
-	void(*draw_ptr)();
-	// callbacks shouldn't be allowed to be called from the outside
+    // script instance
+    NativeScript script;
+    
+    // callbacks shouldn't be allowed to be called from the outside
 
 	// update & render running
 	bool running;
 
 private:	// methods
-	Tahm();
+	Tahm(): 
+        window(Window()), 
+        input(Input()),
+        renderer(Renderer(window)),
+        graphics(Graphics(renderer)),
+        audio(Audio()),
+        running(true)
+    {};
 	void init(void); 
 
 	void setup();		
@@ -240,3 +278,4 @@ private:	// methods
 	void destroy();	
 	
 };
+

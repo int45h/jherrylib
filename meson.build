@@ -29,13 +29,25 @@ src = [
     'tahm/tahm/util.cpp',
     'tahm/tahm/window.cpp',
     'tahm/tahm/audio.cpp',
-    'tahm/engine.cpp',
-    'tahm/main.cpp'
+    'tahm/tahm/platform/plugin/plugin_posix.cpp',
+    'tahm/engine.cpp'
 ]
 
+src_lib = [
+    'tahm/src/Ball.cpp',
+    'tahm/src/Paddle.cpp',
+    'tahm/main.cpp',
+]
+
+
+lib_engine = static_library('tahm', src, cpp_args: args, dependencies: deps)
+lib_engine_deps = declare_dependency(
+    link_with: lib_engine,
+    sources: src
+)
+lib = shared_library('main', src_lib, dependencies: lib_engine_deps)
+
 executable(
-    'tahm', 
-    src,
-    cpp_args: args,
-    dependencies: deps
+    'tahm',
+    dependencies: [lib_engine_deps]
 )

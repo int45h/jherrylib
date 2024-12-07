@@ -14,10 +14,6 @@
         used by the library renderer to set up the
         rendering process.
 */
-
-
-
-
 Tahm::Renderer::Renderer(Window& window)
 {
     this->window = &window;
@@ -35,8 +31,6 @@ void Tahm::Renderer::init(void)
         exit(1);
     }
 }
-
-
 
 void Tahm::Renderer::prepare(void)
 {

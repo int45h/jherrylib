@@ -15,33 +15,19 @@
 
 Tahm* Tahm::tahm;
 
-Tahm::Tahm(void)
-{
-	running = true;
-
-	window = new Window;
-	renderer = new Renderer(*window);
-
-	input = new Input;
-	graphics = new Graphics(*renderer);
-	audio = new Audio();
-}
-
 void Tahm::init(void)
 {
-	window->init();
-	renderer->init();
-	audio->setupDevice();
+	window.init();
+	renderer.init();
+	audio.setupDevice();
 }
 
-void Tahm::initializeCallbacks(
-	void(*start)(), void(*input)(Event),
-	void(*update)(), void(*draw)()
-) {
-    start_ptr = start;
-    input_ptr = input;
-    update_ptr = update;
-    draw_ptr = draw;
+bool Tahm::loadPlugin(const char *path)
+{
+    if (!script.LoadSharedObject(path)) return false;
+    if (!script.Bind(this)) return false;
+
+    return true;
 }
 
 Tahm& Tahm::getInstance(void)
@@ -65,7 +51,7 @@ void Tahm::handleEvents()
 
 
 		case SDL_KEYDOWN:
-			input_ptr(event);
+			script.RunKeyPressed(event);
 			break;
 
 		default:
@@ -77,7 +63,7 @@ void Tahm::handleEvents()
 
 void Tahm::setup()
 {
-	start_ptr();
+	script.RunStart();
 	init();
 }
 
@@ -85,13 +71,11 @@ void Tahm::loop()
 {
 	handleEvents();
 
-	update_ptr();
+	script.RunUpdate(SDL_GetTicks() / 1000.0f);
+	renderer.prepare();
 
-	renderer->prepare();
-
-	draw_ptr();
-
-	renderer->present();
+	script.RunDraw();
+	renderer.present();
 
 	SDL_Delay(16);
 }
@@ -112,19 +96,19 @@ void Tahm::run()
 
 void Tahm::destroy(void)
 {
-	SDL_DestroyRenderer(renderer->SDLrenderer);
-
-	SDL_DestroyWindow(window->SDLwindow);
+    script.Close();
+	SDL_DestroyRenderer(renderer.SDLrenderer);
+	SDL_DestroyWindow(window.SDLwindow);
 
 	SDL_Quit();
 }
 
 Tahm::~Tahm()
 {
-	delete window;
-	delete renderer;
-	delete input; 
-	delete graphics;
-	delete audio;
-	delete tahm;
+	//delete window;
+	//delete renderer;
+	//delete input; 
+	//delete graphics;
+	//delete audio;
+	//delete tahm;
 }

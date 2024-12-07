@@ -1,22 +1,18 @@
 #include "seek.h"
 
 /*
-		tahmlib
-		A C++ library for Game Development
+	tahmlib
+	A C++ library for Game Development
 
-		Author: Tamta Asatiani
-		tamta@geolab.edu.ge
+	Author: Tamta Asatiani
+	tamta@geolab.edu.ge
 
-		-- Graphics --
+	-- Graphics --
 
-		Definitions for all graphics related methods,
-		such as: font and shape rendering, setting the draw color,
-		background fill.
+	Definitions for all graphics related methods,
+	such as: font and shape rendering, setting the draw color,
+    background fill.
 */
-
-
-
-
 Tahm::Graphics::Graphics(Renderer& renderer)
 {
 	this->renderer = &renderer;
@@ -30,7 +26,6 @@ Tahm::Graphics::~Graphics()
 	delete font;
 	delete draw;
 }
-
 
 void Tahm::Graphics::clear(int r, int g, int b, int a)
 {
@@ -47,8 +42,7 @@ void Tahm::Graphics::setColor(int r, int g, int b, int a)
 	color = { cr, cg, cb , ca};
 }
 
-
-void Tahm::Graphics::print(int x, int y, TTF_Font* font, const char* text)
+void Tahm::Graphics::renderText(int x, int y, TTF_Font* font, const char* text)
 {
 	SDL_Surface* renderedText = TTF_RenderText_Solid(font, text, color);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->SDLrenderer, renderedText);
@@ -60,7 +54,7 @@ void Tahm::Graphics::print(int x, int y, TTF_Font* font, const char* text)
 	SDL_FreeSurface(renderedText);
 }
 
-void Tahm::Graphics::printf(const char* alignment, int alignmentWidth, int marginX, int marginY, TTF_Font* font, const char* text)
+void Tahm::Graphics::renderText(const char* alignment, int alignmentWidth, int marginX, int marginY, TTF_Font* font, const char* text)
 {
 	SDL_Surface* renderedText = TTF_RenderText_Solid(font, text, color);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->SDLrenderer, renderedText);
@@ -84,14 +78,17 @@ void Tahm::Graphics::printf(const char* alignment, int alignmentWidth, int margi
 		std::cerr << "Invalid alignment!" << '\n';
 	}
 
+	int res = SDL_RenderCopy(renderer->SDLrenderer, texture, NULL, &destination);
+    if (res != 0)
+    {
+        fprintf(stderr, "%s\n", SDL_GetError());
+    }
 
-	SDL_RenderCopy(renderer->SDLrenderer, texture, NULL, &destination);
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(renderedText);
 }
 
 //draw
-
 Tahm::Graphics::Draw::Draw(Renderer& renderer)
 {
 	this->renderer = &renderer;

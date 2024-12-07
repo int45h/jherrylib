@@ -1,7 +1,4 @@
 #include "engine.h"
-
-
-
 /*
 		tahmlib
 		A C++ library for Game Development
@@ -16,28 +13,18 @@
 		and cleans up references when the application is closed.
 */
 
-
 // event handling
-
 Tahm& tahm = Tahm::getInstance();
 
 // game loop
-
-
-int main(int argc, char* argv[])
+int main()
 {
-	if (!GAME_FOUND)
+	if (!tahm.loadPlugin("./libmain.so"))
 	{
 		std::cerr << "tahm cannot find the game code\n";
 		return 0;
 	}
 
-	tahm.initializeCallbacks(
-		start, keypressed,
-		update, draw
-	);
-
 	tahm.run();
-
 	return 0;
 }
